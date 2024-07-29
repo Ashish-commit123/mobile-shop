@@ -103,7 +103,7 @@
     <div class="col-6">
       <h2 class="mid text-center mb-3">Product Enquiry</h2>
                                                                      <!-- Form -->
-          <form>
+          <form method="post" id="enquiry">
             <div class="row">
               
                 <div class=" col mb-3">                                        <!--first name-->  
@@ -135,7 +135,7 @@
             </div>
             
 
-            <select class="form-select mb-3" aria-label="Default select mobile">               <!--select options-->
+            <select id="product" class="form-select mb-3" aria-label="Default select mobile">               <!--select options-->
               <option selected>Select your brand</option>
               <option value="1">Apple</option>
               <option value="2">Samsung</option>
@@ -174,5 +174,52 @@
 </div>
 
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+
+        <script>
+
+          console.log("Hello console")
+          const form = document.getElementById('enquiry')
+          console.log(form)
+
+          form.addEventListener('submit', function(event) {
+            event.preventDefault();
+            const firstName = form.elements.first_name.value;
+            const lastName = form.elements.last_name.value;
+            const email = form.elements.email_address.value;
+            const mobile = form.elements.mobile.value;
+            const product = form.elements.product.value;
+            const enquiryMessage = form.elements.enquiry_message.value;
+
+           
+            if(firstName == "")
+            {
+              alert("First name is required");
+            }
+
+            if(!(/^[6-9]\d{9}$/.test(mobile)))
+            {
+              alert("Please provide valid mobile number")
+            }
+
+            const formData = {
+              firstName, lastName, email, mobile, product, enquiryMessage
+            }
+            console.log(firstName, lastName, email, mobile, product, enquiryMessage)
+
+            fetch('https://connect.pabbly.com/workflow/sendwebhookdata/IjU3NjUwNTY0MDYzNzA0Mzc1MjZjNTUzMDUxM2Ii_pc',
+        {
+          method: 'POST',
+          body: JSON.stringify(formData)
+        }).then(res => res.json()).then(res => {
+          console.log(res)
+          alert("We have received your enquiry. We will get in touch shortly. Thank-you")
+        }).finally(function(){
+          form.reset();                    //Clear input
+        })
+          })
+
+        
+
+        </script>
   </body>
 </html>
